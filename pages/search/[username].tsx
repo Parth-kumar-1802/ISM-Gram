@@ -29,12 +29,12 @@ interface Props{
   tweets:Tweet[],
   username:string
 }
-const myLoader = ({ src, width }: Props, quality: number | undefined = 75) => {
-  // const { src, width, quality } = props
-  // console.log(props);
-  // console.log('result %s', `${src}?w=${width}&h=${height}&q=${quality || 75}`);
-  return `${src}?width=${width}&q=${quality || 75}`
-}
+// const myLoader = ({ src, width }: Props, quality: number | undefined = 75) => {
+//   // const { src, width, quality } = props
+//   // console.log(props);
+//   // console.log('result %s', `${src}?w=${width}&h=${height}&q=${quality || 75}`);
+//   return `${src}?width=${width}&q=${quality || 75}`
+// }
 const SideBarRow = dynamic(() => import('../../components/SideBarRow'), {
   loading: () => <JumpCircleLoading />,
   ssr: false,
@@ -62,7 +62,7 @@ function username({ tweets,username }: Props) {
       <div className="row-span-1 flex items-center shadow">
       <a href="https://mailer-daemon.vercel.app" target={'_blank'}>
         <Image
-          loader={myLoader}
+          //loader={myLoader}
           className="mt-4 ml-4 mb-2 h-8 w-8"
           src="/md.jpg"
           alt="MD logo"
