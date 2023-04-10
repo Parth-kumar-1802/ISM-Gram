@@ -10,6 +10,8 @@ import {
   MailIcon,
   UserIcon,
   HomeIcon,
+  HeartIcon,
+  SaveIcon,
 } from '@heroicons/react/outline'
 
 const { JumpCircleLoading } = require('react-loadingg')
@@ -92,7 +94,11 @@ function SideBar() {
         <div className="flex justify-between p-2">
           <div
             onClick={hamburgerHandler}
-            className="text-300 top-1 block cursor-pointer "
+            className={`${
+              user._id
+                ? "text-300 top-1 block cursor-pointer "
+                : 'hidden'
+            }`}
           >
             <SideBarRow Icon={DotsCircleHorizontalIcon} title="" /> 
           </div>
@@ -100,7 +106,7 @@ function SideBar() {
         <div
           className={`${
             responsiveNavState && user._id
-              ? 'items-left absolute top-10 z-10 flex h-full w-1/2  flex-col  bg-white pl-3 pt-2 shadow-2xl'
+              ? 'items-left absolute top-10 z-10 flex h-full w-1/2 lg:w-1/4  flex-col  bg-white pl-3 pt-2 shadow-2xl'
               : 'hidden'
           }`}
         >
@@ -111,11 +117,20 @@ function SideBar() {
               <SideBarRow Icon={UserIcon} title="Profile" />
             </span>
           </Link>
-          <SideBarRow Icon={HashtagIcon} title="Explore" />
-          <SideBarRow Icon={BellIcon} title="Notifications" />
-          <SideBarRow Icon={MailIcon} title="Messages" />
-          <SideBarRow Icon={BookmarkIcon} title="Bookmarks" />
-          <SideBarRow Icon={CollectionIcon} title="Lists" />
+          {/* <SideBarRow Icon={HashtagIcon} title="Explore" /> */}
+          {/* <SideBarRow Icon={BellIcon} title="Notifications" /> */}
+          {/* <SideBarRow Icon={MailIcon} title="Messages" /> */}
+          {/* <Link href={`/savedPosts/${user.email}`}>
+            <span>
+            <SideBarRow Icon={SaveIcon} title="Saved Posts" />
+            </span>
+          </Link> */}
+          <Link href={`/likedPosts/${user.username}`}>
+            <span>
+              <SideBarRow Icon={HeartIcon} title="Liked Posts" />
+            </span>
+          </Link>
+          {/* <SideBarRow Icon={HeartIcon} title="Liked Posts" /> */}
           </>
           )}
         </div>
