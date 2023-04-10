@@ -12,17 +12,17 @@ import { Tweet, User } from "../../typings";
 
 interface Props{
   tweets:Tweet[],
-  username:string
+  email:string,
 }
 
-function username({ tweets,username }: Props) {
+function username({ tweets,email}: Props) {
   // debugger;
   // console.log(tweets);
-
   return (
     <div className="col-span-7 max-h-screen overflow-scroll border-x scrollbar-hide lg:col-span-5 max-w-4xl items-center justify-around m-auto">
       <Head>
-        <title>{username}</title>
+        {/* <title>{email}</title> */}
+        <title>Liked Posts</title>
       </Head>
       <div className="flex items-center justify-center">
         <Link href={'/'}>
@@ -45,7 +45,7 @@ function username({ tweets,username }: Props) {
         } */}
         {tweets.length>0 ?tweets.map((tweet) => {
           return <TweetComponent key={tweet._id} tweet={tweet} />
-        }):<p>User hasn't posted anything yet</p>}
+        }):<p>User hasn't liked any posts yet</p>}
       </div>
     </div>
   )
@@ -56,14 +56,15 @@ export default username
 export const getStaticPaths= async () => {
 
   const query = `*[_type=="user" && !blockUser]{
-    username
+    username,
+    email
   }`
   const users=await sanityClient.fetch(query);
   // console.log(users);
   const usersFiltered=users.filter((user:User) => user.username!==null)
   const paths=usersFiltered.map((user:User) => ({
     params:{
-      username:user.username as string
+      username:user.username as string,
     },
   }))
   return {
@@ -80,10 +81,19 @@ export const getStaticProps:GetStaticProps = async ({params}) => {
   //     notFound:true
   //   }
   // }
-  const query = `*[_type=="tweet" && username==$username && !blockTweet]|order(_createdAt desc){
+  const query1 = `*[_type=="user" && !blockUser]{
+    username,
+    email
+  }`
+  const users=await sanityClient.fetch(query1);
+  // console.log(users);
+  const usersFiltered=users.filter((user:User) => user.username== params?.username)
+
+  //on adding likes.include(&email) it is giving attribute error
+  const query = `*[_type=="tweet" && $username in likes && !blockTweet]|order(_createdAt desc){
     _id,
     username,
-    likes,
+    likes[]->{value},
     text,
     profileImg,
     image,
@@ -100,7 +110,7 @@ export const getStaticProps:GetStaticProps = async ({params}) => {
   return {
     props:{
       tweets,
-      username:params?.username
+      username:params?.username,
     },
     revalidate:60,
   }
